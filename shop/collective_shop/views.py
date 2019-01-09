@@ -13,11 +13,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import *
 
 
 
 def index(request):
     return render(request, 'collective_shop/index.html')
+	
+def dashboard(request):
+    return render(request, 'collective_shop/dashboard.html')
 
 class UserCreateForm(auth_forms.UserCreationForm):
     first_name = forms.RegexField(label=_("Name"), max_length=30, regex=r'^[a-z A-Z]{2,30}$',
@@ -90,12 +94,7 @@ def signin(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            active = Activation.objects.get(user=user)	
-            if user and active.is_validated:
-                login(request, user)
-                if not next:
-                    return redirect(reverse('services'))
-                return redirect(next)
+            return render(request, 'collective_shop/dashboard.html')
             
 
 
@@ -106,3 +105,23 @@ def signin(request):
 def signout(request):
     logout(request)
     return redirect('/')
+	
+	
+	
+def createorder(request):
+	if request.method=="POST":
+		link=request.POST.get('link')
+		address=request.POST.get('address')
+		pin=request.POST.get('pin')
+		phone=request.POST.get('phone')
+		Order.objects.create(user=request.user,url=link,address=address,PIN=pin,phone=phone)
+		return render(request, 'collective_shop/confirmation.html')
+	else:
+		return render(request, 'collective_shop/CreateOrder.html')
+		
+		
+
+	
+def ongoing(request):
+	order=Order.objects.filter(user=request.user,purchased=False)
+	return render(request, 'collective_shop/ongoing.html', {'order':order})

@@ -1,0 +1,12 @@
+<form method="post" action = "/createorder/">{% csrf_token %}
+Link:
+<input type="text" name="link" required="required"><br><br>
+Address:
+<input type="text" name="address" required="required"><br><br>
+PIN:
+<input type="text" name="pin" required="required"><br><br>
+Phone number:
+<input type="text" name="phone" required="required"><br><br>
+<input type="submit" name="submit" value="submit">
+
+</form>

@@ -7,9 +7,11 @@ from django_extensions.db.models import TimeStampedModel
 
 class Order(TimeStampedModel):
 	user = models.ForeignKey(User)
-	name = models.CharField(max_length=50, null=True, blank=True)
+	phone = models.TextField(default=0)
 	address = models.TextField()
+	PIN = models.TextField(default=0)
 	url = models.URLField()
+	purchased = models.BooleanField(default=False)
 	flag = models.IntegerField(default=0)
 
 class Package(TimeStampedModel):
